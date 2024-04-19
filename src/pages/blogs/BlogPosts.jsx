@@ -3,7 +3,13 @@ import { FiSearch, FiFilter, FiChevronDown, FiShare2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom'; // Import Link from React Router
 
 
-function BlogPosts() {
+function BlogPosts({title}) {
+
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+  
   const [activeTab, setActiveTab] = useState('published'); // State to track active tab
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false); // State to track filter dropdown visibility
   const [selectedFilter, setSelectedFilter] = useState('Oldest'); // State to track selected filter option

@@ -40,23 +40,23 @@ function Navbar() {
         <div className="flex justify-center items-center mt-4 mb-4"> 
         <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'home' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('home')}>
   Home
-  {activeTab === 'home' && <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+  {activeTab === 'home' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
 </Link>
 <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'posts' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('posts')}>
   Posts
-  {activeTab === 'posts' && <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+  {activeTab === 'posts' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
 </Link>
 <a href="#" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'subscribers' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('subscribers')}>
   Subscribers
-  {activeTab === 'subscribers' && <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+  {activeTab === 'subscribers' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
 </a>
 <a href="#" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'statistics' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('statistics')}>
   Statistics
-  {activeTab === 'statistics' && <span className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+  {activeTab === 'statistics' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
 </a>
 <a href="#" className={`block text-gray-600 hover:text-gray-900 relative ${activeTab === 'settings' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('settings')}>
   Settings
-  {activeTab === 'settings' && <span className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+  {activeTab === 'settings' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
 </a>
         </div>
       </nav>

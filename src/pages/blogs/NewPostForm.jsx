@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiArrowLeft, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom'; // Import Link from React Router
 
-function NewPostForm() {
+function NewPostForm({title}) {
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+
   return (
     <div className="py-3 mx-4 md:mx-20 overflow-x-hidden"> {/* Hide horizontal overflow */}
       {/* Header */}

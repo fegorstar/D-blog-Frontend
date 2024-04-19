@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi'; // Import eye and eye-off icons from react-icons
 import logo from '../../images/logo.svg'; // Import the logo from the assets folder
 import { FaCircle } from 'react-icons/fa'; // Import bullet icon from react-icons
 import { Link } from 'react-router-dom'; 
 
-function Register() {
+function Register({title}) {
+
+  
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+
+
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -19,11 +28,13 @@ function Register() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm mt-4"> {/* Reduced margin top */}
-        <img
+       
+      <Link to="/"> <img
           className="mx-auto h-10 w-auto"
           src={logo} // Use the imported logo
           alt="Your Company"
         />
+         </Link>
         <h2 className="mt-4 text-center text-4xl font-bold leading-10 tracking-tight text-gray-900 font-sora"> {/* Updated font size and styles */}
           Create an account
           <br />

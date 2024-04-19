@@ -1,8 +1,14 @@
-import React from 'react'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'; // Import the Navbar component
 import BlogPosts from './blogs/BlogPosts';
-function Home() {
+import React, { useEffect } from 'react';
+
+function Home({ title }) {
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+
   return (
     <div>
       <Header/>

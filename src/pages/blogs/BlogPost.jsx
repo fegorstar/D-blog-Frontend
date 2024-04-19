@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import { FiHeart, FiMessageCircle, FiShare2, FiMoreHorizontal, FiImage } from 'react-icons/fi'; // Changed FiShare to FiShare2, Added FiMoreHorizontal
 import { Link } from 'react-router-dom'; // Import Link from React Router
 
-function BlogPost() {
+
+function BlogPost({ title }) {
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+  
   return (
     <div>
       <Header />

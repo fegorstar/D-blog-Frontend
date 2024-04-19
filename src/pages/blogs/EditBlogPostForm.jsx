@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiArrowLeft, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom'; // Import Link from React Router
 
-function EditBlogPostForm() {
+function EditBlogPostForm({title}) {
+
+  useEffect(() => {
+    document.title = `D-Blog - ${title}`;
+  }, [title]);
+
+
   const [selectedImage, setSelectedImage] = useState(null); // State to store selected image
 
   // Function to handle image selection
