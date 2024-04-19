@@ -133,7 +133,7 @@ function BlogPosts() {
             <div className="border-t border-b my-4"></div>
             <div className="flex flex-col md:flex-row items-center justify-between mb-4">
               <div className="flex items-center">
-              <Link to="/blog">
+              <Link to="/login">
                 <div className="w-20 h-20 bg-gray-200 md:mr-4 md:mb-0 mb-4"></div> {/* Placeholder for post image */}
                 </Link>
                 <div>
