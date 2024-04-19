@@ -4,7 +4,7 @@ import logo from '../../images/logo.svg'; // Import the logo from the assets fol
 import { Link } from 'react-router-dom'; 
 
 function Login({title}) {
-  
+  //For Tab title --getting in from the App.jsx entry app
   useEffect(() => {
     document.title = `D-Blog - ${title}`;
   }, [title]);
