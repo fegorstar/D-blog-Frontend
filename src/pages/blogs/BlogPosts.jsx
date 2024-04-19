@@ -129,7 +129,7 @@ function BlogPosts() {
         {activeTab === 'published' && (
           <div>
             {/* Content for published posts */}
-            {/* Post details */}
+            {/* Post details  here*/}
             <div className="border-t border-b my-4"></div>
             <div className="flex flex-col md:flex-row items-center justify-between mb-4">
               <div className="flex items-center">
