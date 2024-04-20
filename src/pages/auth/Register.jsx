@@ -1,21 +1,26 @@
+// Register.js
 import React, { useState, useEffect } from 'react';
-import { FiEye, FiEyeOff } from 'react-icons/fi'; // Import eye and eye-off icons from react-icons
-import logo from '../../images/logo.svg'; // Import the logo from the assets folder
-import { FaCircle } from 'react-icons/fa'; // Import bullet icon from react-icons
-import { Link } from 'react-router-dom'; 
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import logo from '../../images/logo.svg';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import useAuthStore from '../../store/authStore';
+import LoadingSpinner from '../../components/LoadingSpinner'; // Import the LoadingSpinner component
+import { FaCircle } from 'react-icons/fa';
 
-function Register({title}) {
-
-  
+function Register({ title }) {
   useEffect(() => {
     document.title = `D-Blog - ${title}`;
   }, [title]);
 
-
-
+  const { register } = useAuthStore();
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [registrationMessage, setRegistrationMessage] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false); // State to track registration loading
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -25,25 +30,63 @@ function Register({title}) {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+    setIsRegistering(true); // Show loading spinner
+    const userData = {
+      full_name: e.target.fullname.value,
+      email: e.target.email.value,
+      password: e.target.password.value,
+      confirmPassword: e.target.confirmPassword.value
+    };
+
+    if (userData.password !== userData.confirmPassword) {
+      toast.error('Passwords do not match');
+      setIsRegistering(false); // Hide loading spinner
+      return;
+    }
+
+    try {
+      const response = await register(userData);
+      setRegistrationMessage(response.message);
+      toast.success(response.message);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000); // Delay redirecting to the login page
+    } catch (error) {
+      console.error('Error registering:', error);
+      let errorMessage = 'An error occurred';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      if (error.response && error.response.data && error.response.data.message && error.response.data.message.errors) {
+        const errors = error.response.data.message.errors;
+        if (errors.email) {
+          errorMessage = errors.email[0];
+        }
+      }
+      toast.error(errorMessage);
+    } finally {
+      setIsRegistering(false); // Hide loading spinner
+    }
+  };
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm mt-4"> {/* Reduced margin top */}
-       
-      <Link to="/"> <img
-          className="mx-auto h-10 w-auto"
-          src={logo} // Use the imported logo
-          alt="Your Company"
-        />
-         </Link>
-        <h2 className="mt-4 text-center text-4xl font-bold leading-10 tracking-tight text-gray-900 font-sora"> {/* Updated font size and styles */}
+      <ToastContainer /> {/* Toast container for displaying notifications */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm mt-4">
+        <Link to="/">
+          <img className="mx-auto h-10 w-auto" src={logo} alt="Your Company" />
+        </Link>
+        <h2 className="mt-4 text-center text-4xl font-bold leading-10 tracking-tight text-gray-900 font-sora">
           Create an account
           <br />
-          <span className="text-base text-gray-500 font-inter">Post, manage your blogs. Keep up with audience.</span> {/* Updated text */}
+          <span className="text-base text-gray-500 font-inter">Post, manage your blogs. Keep up with the audience.</span>
         </h2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm"> {/* Adjusted margin top */}
-        <form className="space-y-6" action="#" method="POST">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form onSubmit={handleRegistration} className="space-y-6">
           <div>
             <label htmlFor="fullname" className="block text-sm font-medium leading-6 text-gray-900 font-sora">
               Full Name
@@ -57,7 +100,7 @@ function Register({title}) {
                 required
                 placeholder="Enter full name"
                 className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-sora"
-                style={{ height: '48px', outline: 'none' }} // Set the height and remove outline
+                style={{ height: '48px', outline: 'none' }}
               />
             </div>
           </div>
@@ -75,7 +118,7 @@ function Register({title}) {
                 required
                 placeholder="Enter email address"
                 className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-sora"
-                style={{ height: '48px', outline: 'none' }} // Set the height and remove outline
+                style={{ height: '48px', outline: 'none' }}
               />
             </div>
           </div>
@@ -93,14 +136,12 @@ function Register({title}) {
                 required
                 placeholder="Enter password"
                 className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-sora"
-                style={{ height: '48px', outline: 'none' }} // Set the height and remove outline
+                style={{ height: '48px', outline: 'none' }}
               />
               <button type="button" onClick={togglePasswordVisibility} className="absolute inset-y-0 right-0 pr-3 flex items-center" style={{ top: '70%', transform: 'translateY(-50%)' }}>
                 {passwordVisible ? (
-                  // Password visibility toggle icon when password is visible
                   <FiEyeOff className="h-5 w-5 text-gray-400" />
                 ) : (
-                  // Password visibility toggle icon when password is hidden
                   <FiEye className="h-5 w-5 text-gray-400" />
                 )}
               </button>
@@ -119,63 +160,38 @@ function Register({title}) {
                 required
                 placeholder="Confirm password"
                 className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-sora"
-                style={{ height: '48px', outline: 'none' }} // Set the height and remove outline
+                style={{ height: '48px', outline: 'none' }}
               />
               <button type="button" onClick={toggleConfirmPasswordVisibility} className="absolute inset-y-0 right-0 pr-3 flex items-center" style={{ top: '70%', transform: 'translateY(-50%)' }}>
                 {confirmPasswordVisible ? (
-                  // Password visibility toggle icon when password is visible
                   <FiEyeOff className="h-5 w-5 text-gray-400" />
                 ) : (
-                  // Password visibility toggle icon when password is hidden
                   <FiEye className="h-5 w-5 text-gray-400" />
                 )}
               </button>
             </div>
           </div>
 
-          <div className="mt-4 text-gray-900 font-sora">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              placeholder="Confirm password"
-              className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 font-sora"
-              style={{ height: '48px', outline: 'none' }} // Set the height and remove outline
-            />
-     
-     <ul className="text-xs text-gray-500 mt-2 flex flex-wrap">
-  <li className="flex items-center mb-2" style={{ marginLeft: '0px' }}> {/* Adjusted marginLeft */}
-    <FaCircle className="mr-3 text-gray-500 border border-gray-500 rounded-full" style={{ fill: 'white' }} /> At least 8 characters
-  </li>
-  <li className="flex items-center mb-2" style={{ marginLeft: '0px' }}> {/* Adjusted marginLeft */}
-    <FaCircle className="ml-24 mr-2 text-gray-500 border border-gray-500 rounded-full" style={{ fill: 'white' }} />  Lowercase and Uppercase
-  </li>
-  <li className="flex items-center mb-2" style={{ marginLeft: '0px' }}> {/* Adjusted marginLeft */}
-    <FaCircle className="mr-3 text-gray-500 border border-gray-500 rounded-full" style={{ fill: 'white' }} /> At least One special character
-  </li>
-  <li className="flex items-center mb-2" style={{ marginLeft: '0px' }}> {/* Adjusted marginLeft */}
-    <FaCircle className="ml-12 mr-2 text-gray-500 border border-gray-500 rounded-full" style={{ fill: 'white' }} /> At least one number
-  </li>
-</ul> </div>
-
           <div>
             <button
               type="submit"
-              className="w-full bg-[#093D9F] px-24 py-4 text-lg font-semibold leading-6 text-white rounded-md shadow-sm hover:bg-[#111827] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-sora"
-              style={{ height: '56px' }} // Set the height of the button
+              className="w-full bg-[#093D9F] px-24 py-4 text-lg font-semibold leading-6 text-white rounded-md shadow-sm hover:bg-[#111827] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-sora relative"
+              style={{ height: '56px' }}
             >
-              Create Account
+              {isRegistering ? (
+                <div className="flex items-center">
+                  <LoadingSpinner />
+                  <span className="ml-1">Processing...</span>
+                </div>
+              ) : (
+                'Create Account'
+              )}
             </button>
           </div>
           <div className="mt-4 text-center text-sm text-gray-500 font-sora">
-  Already have an account?{' '}
-  <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">Login</Link>
-</div>
-          
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">Login</Link>
+          </div>
         </form>
       </div>
     </div>

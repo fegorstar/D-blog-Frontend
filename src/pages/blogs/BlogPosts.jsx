@@ -1,15 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiSearch, FiFilter, FiChevronDown, FiShare2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom'; // Import Link from React Router
+import useBlogStore from '../../store/blogStore'; // Import your store
+import useAuthStore from '../../store/authStore'; // Import the auth store
 
-
-function BlogPosts({title}) {
+function BlogPosts({ title }) {
+  const [posts, setPosts] = useState([]); // State to store fetched posts
+  const { fetchPosts } = useBlogStore(); // Use your custom hook to fetch posts
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     document.title = `D-Blog - ${title}`;
-  }, [title]);
 
-  
+    // Fetch posts when the component mounts
+    fetchPosts()
+      .then((data) => {
+        setPosts(data); // Update component state with fetched posts
+      })
+      .catch((error) => {
+        console.error('Error fetching posts:', error);
+      });
+  }, [title, fetchPosts]);
+
   const [activeTab, setActiveTab] = useState('published'); // State to track active tab
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false); // State to track filter dropdown visibility
   const [selectedFilter, setSelectedFilter] = useState('Oldest'); // State to track selected filter option
@@ -52,40 +64,30 @@ function BlogPosts({title}) {
     <div className="py-3 mx-4 md:mx-20">
       {/* Your Posts section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold mb-2 md:mb-0" style={{ fontFamily: 'Sora', fontSize: '24px', fontWeight: '600', lineHeight: '32px', textAlign: 'left' }}>Your Posts</h2>
-       {/* Link to the new post form */}
-       <Link to="/add">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md" style={{ background: '#093D9F' }}>
-            Create New Post
-          </button>
-        </Link>
-      
+        <h2 className="text-xl font-semibold mb-2 md:mb-0" style={{ fontFamily: 'Sora', fontSize: '24px', fontWeight: '600', lineHeight: '32px', textAlign: 'left' }}>{isAuthenticated ? 'Your Posts' : 'Posts'}</h2>
+        {/* Link to the new post form */}
+        {isAuthenticated && (
+          <Link to="/add">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" style={{ background: '#093D9F' }}>
+              Create New Post
+            </button>
+          </Link>
+        )}
       </div>
       {/* Tabs section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <div className="flex flex-wrap justify-center md:justify-start">
-        <button
-  className={`relative text-gray-600 mr-4 mb-2 md:mb-0 ${activeTab === 'published' ? 'font-semibold text-blue-500' : 'text-blue-900'}`}
-  onClick={() => handleTabClick('published')}
->
-  Published <span className="text-xs ml-1">(10)</span>
-  {activeTab === 'published' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
-</button>
-<button
-  className={`relative text-gray-600 mr-4 mb-2 md:mb-0 ${activeTab === 'draft' ? 'font-semibold text-blue-500' : 'text-blue-900'}`}
-  onClick={() => handleTabClick('draft')}
->
-  Draft <span className="text-xs ml-1">(5)</span>
-  {activeTab === 'draft' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
-</button>
-<button
-  className={`relative text-gray-600 mb-2 md:mb-0 ${activeTab === 'scheduled' ? 'font-semibold text-blue-500' : 'text-blue-900'}`}
-  onClick={() => handleTabClick('scheduled')}
->
-  Scheduled <span className="text-xs ml-1">(3)</span>
-  {activeTab === 'scheduled' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
-</button>
-
+          {/* Render tabs based on the fetched posts */}
+          {posts.map((post) => (
+            <button
+              key={post.id}
+              className={`relative text-gray-600 mr-4 mb-2 md:mb-0 ${activeTab === post.status ? 'font-semibold text-blue-500' : 'text-blue-900'}`}
+              onClick={() => handleTabClick(post.status)}
+            >
+              {post.status} <span className="text-xs ml-1">({post.count})</span>
+              {activeTab === post.status && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+            </button>
+          ))}
         </div>
         <div className="ml-auto flex items-center">
           <div className="relative flex items-center h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden border border-gray-300">
@@ -131,65 +133,19 @@ function BlogPosts({title}) {
       </div>
       {/* Blog posts content */}
       <div>
-        {/* Published Posts section */}
-        {activeTab === 'published' && (
-          <div>
-            {/* Content for published posts */}
-            {/* Post details  here*/}
-            <div className="border-t border-b my-4"></div>
-            <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-              <div className="flex items-center">
-              <Link to="/blog">
-                <div className="w-20 h-20 bg-gray-200 md:mr-4 md:mb-0 mb-4"></div> {/* Placeholder for post image */}
-                </Link>
-                <div>
-                <Link to="/blog">
-                  <h3 className="text-lg font-semibold mb-1">Post Title</h3>
-                  <p className="text-sm text-gray-600 mb-2">Post Description</p>
-                  <div className="flex items-center">
-                    <p className="text-sm text-gray-600 mr-4">Date</p>
-                    <p className="text-sm text-gray-600 mr-4">Time</p>
-                    <FiShare2 className="text-gray-600" />
-                  </div>
-                  </Link>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="text-sm text-gray-600 mr-14">
-                  <span className="font-bold text-lg ml-2">14</span>
-                  <br />
-                  <span>Opened</span>
-                </div>
-                <div className="text-sm text-gray-600 mr-14">
-                  <span className="font-bold text-lg ml-2">34</span>
-                  <br />
-                  <span>Reads</span>
-                </div>
-                <div className="text-sm text-gray-600 mr-14">
-                  <span className="  font-bold text-lg ml-2">67</span>
-                  <br />
-                  <span>New Subs</span>
-                </div>
-                <button className="text-gray-600 font-semibold mr-12" onClick={handleActionDropdownToggle}>
-                  ...
-                </button>
-                {isActionDropdownOpen && (
-                  <div ref={actionDropdownRef} className="absolute right-0 mt-2 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <ul className="py-1">
-                      <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left">Publish</li>
-                      <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left">Draft</li>
-                      <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left">Delete</li>
-                    </ul>
-                  </div>
-                )}
+        {/* Render posts based on the selected tab */}
+        {posts
+          .filter((post) => post.status === activeTab)
+          .map((post) => (
+            <div key={post.id}>
+              {/* Content for published posts */}
+              {/* Post details  here*/}
+              <div className="border-t border-b my-4"></div>
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+                {/* Render post details based on the fetched data */}
               </div>
             </div>
-            {/* Replace this with dynamic content */}
-            <div>
-             
-            </div>
-          </div>
-        )}
+          ))}
       </div>
       {/* Post details */}
       <div className="border-t border-b my-4"></div>
