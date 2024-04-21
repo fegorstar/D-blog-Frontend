@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore'; 
 import useBlogStore from '../../store/blogStore';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import logo from '../../images/logo.svg'; // Import the logo from the assets folder
+import logo from '../../assets/images/logo.svg'; 
 
 
 function BlogPosts({ title }) {
@@ -49,6 +49,7 @@ function BlogPosts({ title }) {
         // Refresh the posts after publishing
         setPublishedPosts(prevPosts => prevPosts.filter(post => post.post_id !== postId));
         setDraftPosts(prevPosts => prevPosts.filter(post => post.post_id !== postId));
+        window.location.reload();
       } catch (error) {
         console.error('Error publishing post:', error);
       }
@@ -163,15 +164,19 @@ useEffect(() => {
   
   return (
     <div className="py-3 mx-4 md:mx-20">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold mb-2 md:mb-0" style={{ fontFamily: 'Sora', fontSize: '24px', fontWeight: '600', lineHeight: '32px', textAlign: 'left' }}>Your Posts</h2>
-        {isAuthenticated && (<Link to="/add">
+    <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+      <h2 className="text-xl font-semibold mb-2 md:mb-0" style={{ fontFamily: 'Sora', fontSize: '24px', fontWeight: '600', lineHeight: '32px', textAlign: 'left' }}>
+        {isAuthenticated ? 'Your Posts' : 'All Posts'}
+      </h2>
+      {isAuthenticated && (
+        <Link to="/add">
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md" style={{ background: '#093D9F' }}>
             Create New Post
           </button>
         </Link>
-        )}
-      </div>
+      )}
+    </div>
+  
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <div className="flex flex-wrap justify-center md:justify-start">
           {isAuthenticated && (
@@ -270,32 +275,38 @@ useEffect(() => {
     />
   )}
 </Link>
-    <div className="ml-8 md:ml-0">
-      <Link to={`/blog/${post.post_id}`}>
-        <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
-        <p className="text-sm text-gray-600 mb-2">{post.description}</p>
-        <div className="flex items-center">
-          <p className="text-sm text-gray-600 mr-4">
-            {formatDate(post.created_at)} .  {calculateReadTime(post.description)} min read
-          </p>
-          <FiShare2 className="text-gray-600" />
-        </div>
-      </Link>
+<div className="ml-8 md:ml-0">
+  <Link to={`/blog/${post.post_id}`} className="flex items-center">
+    <div>
+      <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
+      <p className="text-sm text-gray-600 mb-1">{post.description}</p>
+      <div className="flex items-center"> {/* Wrap in a flex container */}
+        <p className="text-sm text-gray-600 mb-0">
+          {formatDate(post.created_at)} . {calculateReadTime(post.description)} min read
+        </p>
+        <FiShare2 className="text-gray-600 ml-2" /> 
+            </div>
+            <p className="font-semibold text-sm text-gray-500 pt-1">posted by {post.author}</p> {/* Add margin to the author text */}
+  
     </div>
+  </Link>
+</div>
+
+
 
                 </div>
                 <div className="flex items-center">
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{14}</span>
                     <br />
                     <span>Opened</span>
                   </div>
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{10}</span>
                     <br />
                     <span>Reads</span>
                   </div>
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{2}</span>
                     <br />
                     <span>New Subs</span>
@@ -373,32 +384,38 @@ useEffect(() => {
     />
   )}
 </Link>
-    <div className="ml-8 md:ml-0">
-      <Link to={`/blog/${post.post_id}`}>
-        <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
-        <p className="text-sm text-gray-600 mb-2">{post.description}</p>
-        <div className="flex items-center">
-          <p className="text-sm text-gray-600 mr-4">
-            {formatDate(post.created_at)} . {calculateReadTime(post.description)} min read
-          </p>
-          <FiShare2 className="text-gray-600" />
-        </div>
-      </Link>
+   
+<div className="ml-8 md:ml-0">
+  <Link to={`/blog/${post.post_id}`} className="flex items-center">
+    <div>
+      <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
+      <p className="text-sm text-gray-600 mb-1">{post.description}</p>
+      <div className="flex items-center"> {/* Wrap in a flex container */}
+        <p className="text-sm text-gray-600 mb-0">
+          {formatDate(post.created_at)} . {calculateReadTime(post.description)} min read
+        </p>
+        <FiShare2 className="text-gray-600 ml-2" /> 
+            </div>
+            <p className="font-semibold text-sm text-gray-500 pt-1">posted by {post.author}</p> {/* Add margin to the author text */}
+  
     </div>
-  </div>
+  </Link>
+</div>
+</div>
+
 
                 <div className="flex items-center">
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{14}</span>
                     <br />
                     <span>Opened</span>
                   </div>
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{10}</span>
                     <br />
                     <span>Reads</span>
                   </div>
-                  <div className="text-sm text-gray-600 mr-6 md:mr-14">
+                  <div className="text-sm pt-6 text-gray-600 mr-6 md:mr-14">
                     <span className="font-bold text-lg ml-2">{2}</span>
                     <br />
                     <span>New Subs</span>

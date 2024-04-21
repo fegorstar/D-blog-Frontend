@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiBell } from 'react-icons/fi';
 import { Link } from 'react-router-dom'; // Import Link from React Router
-import logo from '../images/logo.svg'; // Import the logo from the assets folder
+import logo from '../assets/images/logo.svg'; 
 import useAuthStore from '../store/authStore'; // Import the auth store
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';

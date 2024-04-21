@@ -1,7 +1,7 @@
 // Login.js
 import React, { useState, useEffect } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import logo from '../../images/logo.svg';
+import logo from '../../assets/images/logo.svg';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FiArrowLeft, FiImage } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -13,9 +13,11 @@ import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 function NewPostForm({ title }) {
   useEffect(() => {
     document.title = `D-Blog - ${title}`;
+    titleInputRef.current.focus(); // Focus on the title input field when the page loads
   }, [title]);
 
   const navigate = useNavigate();
+  const titleInputRef = useRef(null); // Create a ref for the title input field
   const [isPublishing, setIsPublishing] = useState(false);
   const [postData, setPostData] = useState({
     img_url: null,
@@ -161,6 +163,7 @@ function NewPostForm({ title }) {
           <input
             type="text"
             id="title"
+            ref={titleInputRef} // Set the ref for the title input field
             className="bg-white rounded-md pl-2 placeholder-gray-600 focus:outline-none w-full text-left font-sora font-bold text-4xl text-gray-900"
             placeholder="Title"
             onChange={(e) => {
@@ -188,14 +191,14 @@ function NewPostForm({ title }) {
         </div>
         {/* Description Input using ReactQuill */}
         <div className="mb-4 mx-auto max-w-4xl" style={{ overflow: 'hidden' }}>
-  <ReactQuill
-    value={postData.content}
-    onChange={(content) => setPostData((prevState) => ({ ...prevState, content }))}
-    className="bg-white rounded-md pl-2 placeholder-gray-600 focus:outline-none w-full text-left font-inter text-base text-gray-900"
-    placeholder="Description"
-    style={{ height: '300px', overflow: 'hidden' }} // Set the height of the editor and prevent overflow
-  />
-</div>
+          <ReactQuill
+            value={postData.content}
+            onChange={(content) => setPostData((prevState) => ({ ...prevState, content }))}
+            className="bg-white rounded-md pl-2 placeholder-gray-600 focus:outline-none w-full text-left font-inter text-base text-gray-900"
+            placeholder="Description"
+            style={{ height: '300px', overflow: 'hidden' }} // Set the height of the editor and prevent overflow
+          />
+        </div>
       </form>
     </div>
   );
