@@ -52,15 +52,22 @@ function Navbar() {
         </Link>
       </h2>
       <nav className="border-t-2 border-b-2 border-gray-200 hidden md:block">
-        <div className="flex justify-center items-center mt-4 mb-4"> 
-          <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'home' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('home')}>
-            Home
-            {activeTab === 'home' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
-          </Link>
-          <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'posts' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('posts')}>
-            Posts
-            {activeTab === 'posts' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
-          </Link>
+      <div className="flex justify-center items-center mt-4 mb-4"> 
+      <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'home' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('home')}>
+        Home
+        {activeTab === 'home' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+      </Link>
+      <Link to="/" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'posts' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('posts')}>
+        Posts
+        {activeTab === 'posts' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+      </Link>
+      {/* Conditionally render the "Register" link */}
+      {!userName && (
+        <Link to="/register" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'register' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('register')}>
+          Register
+          {activeTab === 'register' && <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 h-1 w-1 rounded-full"></span>}
+        </Link>
+      )}
           {isAuthenticated && (
             <>
               <a href="#" className={`block text-gray-600 hover:text-gray-900 md:mr-4 relative ${activeTab === 'subscribers' ? 'font-semibold text-blue-500' : ''}`} onClick={() => handleTabClick('subscribers')}>
@@ -80,18 +87,19 @@ function Navbar() {
         </div>
       </nav>
       <nav className={`border-t-2 border-b-2 border-gray-200 ${isNavbarOpen ? 'block' : 'hidden'} md:hidden`}>
-        <div className="flex flex-col justify-center items-center mt-4 mb-4"> 
-          <Link to="/" className="block text-gray-600 hover:text-gray-900 mb-4">Home</Link>
-          <Link to="/" className="block text-gray-600 hover:text-gray-900 mb-4">Posts</Link>
-          {isAuthenticated && (
-            <>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 mb-4">Subscribers</a>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 mb-4">Statistics</a>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 mb-4">Settings</a>
-            </>
-          )}
-        </div>
-      </nav>
+  <div className="flex flex-col justify-center items-center mt-4 mb-4"> 
+    <Link to="/" className={`block ${activeTab === 'home' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-900'} mb-4`} onClick={() => handleTabClick('home')}>Home</Link>
+    <Link to="/posts" className={`block ${activeTab === 'posts' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-900'} mb-4`} onClick={() => handleTabClick('posts')}>Posts</Link>
+   
+    {isAuthenticated && (
+      <>
+        <a href="#" className={`block ${activeTab === 'subscribers' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-900'} mb-4`} onClick={() => handleTabClick('subscribers')}>Subscribers</a>
+        <a href="#" className={`block ${activeTab === 'statistics' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-900'} mb-4`} onClick={() => handleTabClick('statistics')}>Statistics</a>
+        <a href="#" className={`block ${activeTab === 'settings' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-900'} mb-4`} onClick={() => handleTabClick('settings')}>Settings</a>
+      </>
+    )}
+  </div>
+</nav>
       <button onClick={toggleNavbar} className="absolute top-0 right-0 mr-4 mt-4 md:hidden">
         {isNavbarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
       </button>

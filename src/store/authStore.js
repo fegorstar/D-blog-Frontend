@@ -7,32 +7,8 @@ const useAuthStore = create((set) => ({
   isAuthenticated: false,
   user: null,
 
-  login: async (credentials) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/api/login`, credentials);
-      const responseData = response.data;
-      const { token, name } = responseData.data; // Destructure token and name from responseData.data
 
-      set((prevState) => ({
-        ...prevState,
-        isAuthenticated: true,
-        user: { name }, // Set the user name in the store
-      }));
 
-      // Attempt to save token and name to localStorage
-      try {
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('userName', name); // Save user name in localStorage
-      } catch (localStorageError) {
-        console.error('Error setting authToken in localStorage:', localStorageError);
-      }
-
-      return { token, message: 'Login successful' };
-    } catch (error) {
-      console.error('Error logging in:', error);
-      throw error;
-    }
-  },
 
   register: async (userData) => {
     try {
@@ -62,6 +38,36 @@ const useAuthStore = create((set) => ({
     }
   },
 
+  
+  login: async (credentials) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/login`, credentials);
+      const responseData = response.data;
+
+      const { token, name } = responseData.data;
+
+      set((prevState) => ({
+        ...prevState,
+        isAuthenticated: true,
+        user: { name, token }, // Set the user name and token in the store
+      }));
+
+      // Attempt to save token and name to localStorage
+      try {
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userName', name); // Save user name in localStorage
+        console.log('Set authToken:', token); // Log the token after setting it in localStorage
+      } catch (localStorageError) {
+        console.error('Error setting authToken in localStorage:', localStorageError);
+      }
+
+      return { token, message: 'Login successful' };
+    } catch (error) {
+      console.error('Error logging in:', error);
+      throw error;
+    }
+  },
+
   logout: () => {
     try {
       localStorage.removeItem('authToken');
@@ -83,11 +89,10 @@ const useAuthStore = create((set) => ({
     const userName = localStorage.getItem('userName');
 
     if (authToken && userName) {
-      set((prevState) => ({
-        ...prevState,
+      set({
         isAuthenticated: true,
-        user: { name: userName },
-      }));
+        user: { name: userName, token: authToken }, // Set the user name and token in the store
+      });
     }
   },
 }));

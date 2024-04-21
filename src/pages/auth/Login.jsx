@@ -134,16 +134,20 @@ function Login({ title }) {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="w-full bg-[#093D9F] px-24 py-4 text-lg font-semibold leading-6 text-white rounded-md shadow-sm hover:bg-[#111827] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-sora relative"
-              style={{ height: '56px' }}
-            >
-              <div className="flex items-center justify-center">
-                {isLoading ? <LoadingSpinner /> : null}
-                {isLoading ? <span className="ml-2">Logging in...</span> : 'Login'}
-              </div>
-            </button>
+          <button
+    type="submit"
+    className="w-full bg-[#093D9F] px-24 py-4 text-lg font-semibold leading-6 text-white rounded-md shadow-sm hover:bg-[#111827] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-sora relative"
+    style={{ height: '56px' }}
+  >
+    <div className="flex items-center justify-center">
+      {isLoading && <LoadingSpinner />}
+      {isLoading ? (
+        <span className="ml-1">Loading...</span>
+      ) : (
+        'Login'
+      )}
+    </div>
+  </button>
           </div>
           <div className="mt-4 text-center text-sm text-gray-500 font-sora">
             Don't have an account?{' '}

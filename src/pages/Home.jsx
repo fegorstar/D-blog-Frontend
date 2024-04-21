@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 
 function Home({ title }) {
   useEffect(() => {
-    document.title = `D-Blog - ${title}`;
+    document.title = `D-Blog - Home`;
   }, [title]);
 
 
