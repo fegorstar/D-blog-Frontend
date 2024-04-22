@@ -100,6 +100,7 @@ function NewPostForm({ title }) {
           <span className="text-gray-600 mr-2">Draft</span>
         </div>
         <div className="flex space-x-2">
+          
           {/* Preview Button */}
           <button
             className="text-gray-600"

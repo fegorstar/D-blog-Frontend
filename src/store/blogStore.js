@@ -9,18 +9,8 @@ const useBlogStore = create((set) => ({
 
   fetchPost: async (postId) => {
     try {
-      // Check if the user is authenticated
-      if (!useAuthStore.getState().isAuthenticated) {
-        throw new Error('Unauthenticated');
-      }
-
-      const response = await axios.get(`${BASE_URL}/api/blog/post/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${useAuthStore.getState().user.token}`,
-        },
-      });
-      
-      return response.data;
+      const response = await axios.get(`${BASE_URL}/api/getpost/${postId}`);
+      return response.data.data; // Return the post data
     } catch (error) {
       console.error('Error fetching post details:', error);
       throw error;
@@ -153,7 +143,75 @@ fetchAllPosts: async () => {
     }
   },
 
+  unpublishPost: async (postId) => {
+    try {
+      const token = useAuthStore.getState().user.token;
+      const response = await axios.post(`${BASE_URL}/api/blog/unpublishpost/${postId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error unpublishing post:', error);
+      throw error;
+    }
+  },
 
+  addComment: async (postId, commentText) => {
+    try {
+      // Check if the user is authenticated
+      if (!useAuthStore.getState().isAuthenticated) {
+        throw new Error('You must be logged in to add a comment.');
+      }
+
+      if (!commentText) {
+        throw new Error('Comment text is required.');
+      }
+
+      const token = useAuthStore.getState().user.token;
+      const response = await axios.post(`${BASE_URL}/api/blog/comment`, {
+        post_id: postId,
+        comment: commentText, // Update this line
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const newComment = response.data.data;
+
+      set((prevState) => ({
+        comments: [...prevState.comments, newComment],
+      }));
+
+      return response.data;
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      throw error;
+    }
+  },
+  
+  fetchComments: async (postId, setComments) => {
+    try {
+      // Get the user's authentication token
+      const token = useAuthStore.getState().user.token;
+  
+      // Fetch comments for the post with authentication token included in headers
+      const response = await axios.get(`${BASE_URL}/api/blog/comment/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const commentsData = response.data;
+      // Set comments using setComments method
+      setComments(commentsData);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      throw error;
+    }
+  },
+  
 }));
 
 export default useBlogStore;

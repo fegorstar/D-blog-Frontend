@@ -41,6 +41,21 @@ function BlogPosts({ title }) {
     setOpenDropdownIndex(null);
   };
 
+
+  const handleUnpublishConfirmation = async (postId) => {
+    const confirmed = window.confirm('Are you sure you want to unpublish this post?');
+    if (confirmed) {
+      try {
+        await useBlogStore.getState().unpublishPost(postId);
+        // Refresh the posts after unpublishing
+        setPublishedPosts(prevPosts => prevPosts.filter(post => post.post_id !== postId));
+        setDraftPosts(prevPosts => prevPosts.filter(post => post.post_id !== postId));
+      } catch (error) {
+        console.error('Error unpublishing post:', error);
+      }
+    }
+  };
+
   const handlePublishConfirmation = async (postId) => {
     const confirmed = window.confirm('Are you sure you want to publish this post?');
     if (confirmed) {
@@ -320,11 +335,11 @@ useEffect(() => {
                     <div ref={filterDropdownRef} className="absolute right-0 mt-2 w-28 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {isAuthenticated && (
                         <ul className="py-1">
-                          <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100">
-                            <button onClick={() => handlePublishConfirmation(post.post_id)} className="text-blue-500 hover:text-blue-700">
-                              Unpublish
-                            </button>
-                          </li>
+                         <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100">
+  <button onClick={() => handleUnpublishConfirmation(post.post_id)} className="text-blue-500 hover:text-blue-700">
+    Unpublish
+  </button>
+</li>
                           <li className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100">
                             <Link to={`/edit/${post.post_id}`} className="text-blue-500 hover:text-blue-700">
                               Edit
