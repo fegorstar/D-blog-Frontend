@@ -191,8 +191,7 @@ fetchAllPosts: async () => {
       throw error;
     }
   },
-  
-  fetchComments: async (postId, setComments) => {
+  fetchComments: async (postId) => {
     try {
       // Get the user's authentication token
       const token = useAuthStore.getState().user.token;
@@ -203,9 +202,9 @@ fetchAllPosts: async () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const commentsData = response.data;
-      // Set comments using setComments method
-      setComments(commentsData);
+  
+      // Return only the comments array from the response data
+      return response.data.comments;
     } catch (error) {
       console.error('Error fetching comments:', error);
       throw error;
